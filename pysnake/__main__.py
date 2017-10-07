@@ -5,6 +5,7 @@ from pysnake.image_man import ImageMan
 from pysnake.main_menu import MainMenu
 from pysnake.snake import Snake
 from pysnake.sprite_man import SpriteMan
+from pysnake.items import Items
 
 
 def main():
@@ -30,9 +31,14 @@ def main():
     snake = Snake()
     Field.snake = snake
 
+    Items.snake = snake
+    items = Items()
+    Field.items = items
+
     Game.main_menu = main_menu
     Game.field = field
     Game.snake = snake
+    Game.items = items
     game.run()
 
 

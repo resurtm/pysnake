@@ -7,20 +7,26 @@ class Field:
 
     sprite_man = None
     snake = None
+    items = None
 
     def __init__(self):
         self.__reset_cells()
 
     def draw(self):
+        self.__reset_cells()
         self.apply_snake_to_field()
+        self.apply_items_to_field()
 
         for i, row in enumerate(self.cells):
             for j, cell in enumerate(row):
                 if type(cell) is str:
                     self.sprite_man.draw(cell, (i * self.TILE_WIDTH, j * self.TILE_HEIGHT))
 
+    def apply_items_to_field(self):
+        for apple in self.items.apples:
+            self.cells[apple[0]][apple[1]] = 'apple'
+
     def apply_snake_to_field(self):
-        self.__reset_cells()
         sn = self.snake
         self.__snake_head(sn)
         self.__snake_body(sn)

@@ -19,6 +19,7 @@ class Game:
     main_menu = None
     field = None
     snake = None
+    items = None
 
     def __init__(self):
         self.game_state = GameState.MAIN_MENU
@@ -62,6 +63,7 @@ class Game:
                 self.main_menu.draw()
             if self.game_state is GameState.GAME_PLAY:
                 self.field.draw()
+                self.items.update()
 
             if time_accum >= 0.25:
                 if self.game_state is GameState.GAME_PLAY:

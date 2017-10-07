@@ -89,3 +89,7 @@ class Snake:
             self.y = 0
         if self.y < 0:
             self.y = Field.BOARD_HEIGHT - 1
+
+    def grow_body(self):
+        self.body.append(self.body[self.length - 1])
+        self.length += 1
