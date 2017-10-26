@@ -35,6 +35,7 @@ def main():
     items = Items()
     Field.items = items
 
+    Game.image_man = image_man
     Game.main_menu = main_menu
     Game.field = field
     Game.snake = snake

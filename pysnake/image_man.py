@@ -9,6 +9,7 @@ class ImageMan(Manager):
     resource_names = {
         'snake_tiles_64': os.path.join('snake-tiles', 'snake-graphics-64.png'),
         'snake_tiles_32': os.path.join('snake-tiles', 'snake-graphics-32.png'),
+        'ui': os.path.join('ui', 'ui.png')
     }
 
     @staticmethod

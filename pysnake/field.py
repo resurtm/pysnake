@@ -1,9 +1,11 @@
 class Field:
-    BOARD_WIDTH = 20
-    BOARD_HEIGHT = 20
+    BOARD_WIDTH = 32
+    BOARD_HEIGHT = 24
 
     TILE_WIDTH = 32
     TILE_HEIGHT = 32
+
+    DRAW_OFFSET = 16, 16
 
     sprite_man = None
     snake = None
@@ -11,6 +13,9 @@ class Field:
 
     def __init__(self):
         self.__reset_cells()
+
+    def __reset_cells(self):
+        self.cells = [[False for _ in range(self.BOARD_HEIGHT)] for _ in range(self.BOARD_WIDTH)]
 
     def draw(self):
         self.__reset_cells()
@@ -20,7 +25,10 @@ class Field:
         for i, row in enumerate(self.cells):
             for j, cell in enumerate(row):
                 if type(cell) is str:
-                    self.sprite_man.draw(cell, (i * self.TILE_WIDTH, j * self.TILE_HEIGHT))
+                    self.sprite_man.draw(
+                        cell,
+                        (i * self.TILE_WIDTH + self.DRAW_OFFSET[0], j * self.TILE_HEIGHT + self.DRAW_OFFSET[1])
+                    )
 
     def apply_items_to_field(self):
         for apple in self.items.apples:
@@ -88,6 +96,3 @@ class Field:
                 self.cells[head[0]][head[1]] = 'snake_{}_l'.format(type)
             elif head[0] == n1[0] + 1:
                 self.cells[head[0]][head[1]] = 'snake_{}_r'.format(type)
-
-    def __reset_cells(self):
-        self.cells = [[False for _ in range(self.BOARD_WIDTH)] for _ in range(self.BOARD_HEIGHT)]

@@ -16,6 +16,7 @@ class Game:
     WND_CAPTION = 'pysnake'
     BG_COLOR = 50, 50, 50
 
+    image_man = None
     main_menu = None
     field = None
     snake = None
@@ -58,6 +59,9 @@ class Game:
                     self.main_loop_active = False
 
             self.screen.blit(self.background, (0, 0))
+
+            if self.game_state is GameState.GAME_PLAY:
+                self.screen.blit(self.image_man['ui'], (0, 0))
 
             if self.game_state is GameState.MAIN_MENU:
                 self.main_menu.draw()
