@@ -1,77 +1,66 @@
-from enum import Enum
-
-import pygame
+import enum
 import time
 
+import pygame
 
-class GameState(Enum):
+
+class GameState(enum.Enum):
     MAIN_MENU = 1
     GAME_PLAY = 2
     GAME_MENU = 3
 
 
-class Game:
+class Timer(object):
+    def __init__(self):
+        self.prev_time = time.perf_counter()
+        self.curr_time = self.delta = None
+
+    def update(self):
+        self.curr_time = time.perf_counter()
+        self.delta = self.curr_time - self.prev_time
+        self.prev_time = self.curr_time
+
+
+class Game(object):
     WND_WIDTH = 1280
     WND_HEIGHT = 800
     WND_CAPTION = 'pysnake'
     BG_COLOR = 50, 50, 50
-
-    image_man = None
-    main_menu = None
-    field = None
-    snake = None
-    items = None
+    CLOCK_TICK = 45
 
     def __init__(self):
         self.game_state = GameState.MAIN_MENU
-        self.clock = None
-        self.main_loop_active = False
+        self.main_loop = False
+        self.clock = pygame.time.Clock()
+        self.timer = Timer()
+        self.screen = self.background = None
 
+    def run(self):
         pygame.init()
         self.screen = pygame.display.set_mode((self.WND_WIDTH, self.WND_HEIGHT))
         pygame.display.set_caption(self.WND_CAPTION)
 
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
+        self.background = pygame.Surface(self.screen.get_size()).convert()
         self.background.fill(self.BG_COLOR)
 
-    def run(self):
-        self.clock = pygame.time.Clock()
-        self.main_loop_active = True
+        self.timer.update()
+        self.main_loop = True
 
-        prev_time = time.perf_counter()
-        time_accum = 0
+        while self.main_loop:
+            self.clock.tick(self.CLOCK_TICK)
+            self.timer.update()
 
-        while self.main_loop_active:
-            curr_time = time.perf_counter()
-            time_diff = curr_time - prev_time
-            prev_time = curr_time
-            time_accum += time_diff
+            self.handle_events()
+            self.draw()
 
-            self.clock.tick(60)
+    def handle_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.main_loop = False
 
-            for event in pygame.event.get():
-                if self.game_state is GameState.MAIN_MENU:
-                    self.main_menu.handle_event(event)
-                if self.game_state is GameState.GAME_PLAY:
-                    self.snake.handle_event(event)
-                if event.type == pygame.QUIT:
-                    self.main_loop_active = False
+    def draw(self):
+        self.screen.blit(self.background, (0, 0))
+        pygame.display.update()
 
-            self.screen.blit(self.background, (0, 0))
 
-            if self.game_state is GameState.GAME_PLAY:
-                self.screen.blit(self.image_man['ui'], (0, 0))
-
-            if self.game_state is GameState.MAIN_MENU:
-                self.main_menu.draw()
-            if self.game_state is GameState.GAME_PLAY:
-                self.field.draw()
-                self.items.update()
-
-            if time_accum >= 0.25:
-                if self.game_state is GameState.GAME_PLAY:
-                    self.snake.update()
-                time_accum = 0
-
-            pygame.display.update()
+game = Game()
